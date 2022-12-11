@@ -1,7 +1,7 @@
 # hmdp
-SpringBoot+MyBatisPlus+Hutool+Redis
+点评前后端分离项目
 
-👍黑马点评，前后端分离
+👍黑马点评
 
 🙋后端部署在Tomcat上，前端部分部署在Nginx
 
