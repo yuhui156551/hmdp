@@ -17,7 +17,7 @@ import java.util.List;
  * </p>
  *
  * @author yuhui
- * @since 2021-12-22
+ * @since 2022-12-12
  */
 @RestController
 @RequestMapping("/shop-type")
@@ -27,8 +27,6 @@ public class ShopTypeController {
 
     @GetMapping("list")
     public Result queryTypeList() {
-        List<ShopType> typeList = typeService
-                .query().orderByAsc("sort").list();
-        return Result.ok(typeList);
+        return typeService.queryList();
     }
 }
