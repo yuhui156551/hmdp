@@ -82,6 +82,27 @@ public class CacheClient {
         return r;
     }
 
+    //// 解决缓存穿透
+    ////        Shop shop = cacheClient.queryWithPassThrough(CACHE_SHOP_KEY,
+    ////                id, Shop.class, this::getById, CACHE_SHOP_TTL, TimeUnit.MINUTES);
+    // 自己写一遍,熟悉一下流程
+    public <R, ID> R test(String keyPrefix, ID id, Class<R> type, Function<ID, R> dbFallback, Long time, TimeUnit unit){
+        String key = keyPrefix + id;
+        String json = stringRedisTemplate.opsForValue().get(key);
+        if(StrUtil.isNotBlank(json)){
+            return JSONUtil.toBean(json, type);
+        }
+        if(json != null){
+            return null;
+        }
+        R r = dbFallback.apply(id);
+        if(r == null){
+            stringRedisTemplate.opsForValue().set(key, "", CACHE_NULL_TTL, TimeUnit.MINUTES);
+            return null;
+        }
+        this.set(key, r, time, unit);
+        return r;
+    }
 
     // 方法4：根据指定的key查询缓存，并反序列化为指定类型，需要利用逻辑过期解决缓存击穿问题
     public <R, ID> R queryWithLogicalExpire(

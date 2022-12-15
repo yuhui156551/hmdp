@@ -11,15 +11,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
  * <p>
- *  服务实现类
+ * 服务实现类
  * </p>
  *
- * @author 虎哥
- * @since 2021-12-22
+ * @author yuhui
+ * @since 2022-12-15
  */
 @Service
 public class VoucherServiceImpl extends ServiceImpl<VoucherMapper, Voucher> implements IVoucherService {
@@ -39,6 +40,8 @@ public class VoucherServiceImpl extends ServiceImpl<VoucherMapper, Voucher> impl
     @Transactional
     public void addSeckillVoucher(Voucher voucher) {
         // 保存优惠券
+        // Voucher表含有秒杀券表关键字段
+        // 此处保存操作，会将秒杀券信息保存到两张表当中
         save(voucher);
         // 保存秒杀信息
         SeckillVoucher seckillVoucher = new SeckillVoucher();
