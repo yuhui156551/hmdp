@@ -11,6 +11,7 @@ import com.hmdp.service.IVoucherService;
 import com.hmdp.utils.RedisIdWorker;
 import com.hmdp.utils.UserHolder;
 import org.apache.ibatis.javassist.compiler.ast.Variable;
+import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,7 +21,7 @@ import java.time.LocalDateTime;
 
 /**
  * <p>
- *  服务实现类
+ * 服务实现类
  * </p>
  *
  * @author yuhui
@@ -35,7 +36,7 @@ public class VoucherOrderServiceImpl extends ServiceImpl<VoucherOrderMapper, Vou
     private RedisIdWorker redisIdWorker;
 
     @Override
-    @Transactional// 涉及两张表的操作，最好加上事务处理
+    //@Transactional// 涉及两张表的操作，最好加上事务处理
     public Result seckillVoucher(Long voucherId) {
         // 查询优惠券信息
         SeckillVoucher seckillVoucher = seckillVoucherService.getById(voucherId);
@@ -53,6 +54,27 @@ public class VoucherOrderServiceImpl extends ServiceImpl<VoucherOrderMapper, Vou
             // 库存不足
             return Result.fail("秒杀券已发放完！");
         }
+        // 一人一单逻辑
+        // 查询用户id
+        Long userid = UserHolder.getUser().getId();
+        // 等事务提交之后再释放锁，确保事务不出问题
+        synchronized (userid.toString().intern()) {
+            IVoucherOrderService proxy = (IVoucherOrderService) AopContext.currentProxy();// 代理对象
+            return proxy.createVoucherOrder(voucherId);
+        }
+    }
+
+    @Transactional
+    public Result createVoucherOrder(Long voucherId) {
+        // 查询用户id
+        Long userid = UserHolder.getUser().getId();
+        // 查询此用户所抢这个优惠券之前的时候，这个优惠券的数量
+        int count = query().eq("user_id", userid).eq("voucher_id", voucherId).count();
+        // 判断是否存在
+        if (count > 0) {
+            // 说明此用户之前已经抢过这个优惠券
+            return Result.fail("用户已经抢购过一次！");
+        }
         // 扣减库存
         boolean success = seckillVoucherService.update()
                 .setSql("stock = stock - 1")// set stock = stock - 1
@@ -60,7 +82,7 @@ public class VoucherOrderServiceImpl extends ServiceImpl<VoucherOrderMapper, Vou
                 // 上面这种方法失败率过高
                 .eq("voucher_id", voucherId).gt("stock", 0)// where voucher_id = ? and stock > 0
                 .update();
-        if(!success){
+        if (!success) {
             // 扣减失败
             return Result.fail("秒杀券已发放完！");
         }
