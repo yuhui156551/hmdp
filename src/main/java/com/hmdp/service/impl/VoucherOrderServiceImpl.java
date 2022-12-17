@@ -9,10 +9,12 @@ import com.hmdp.service.IVoucherOrderService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hmdp.service.IVoucherService;
 import com.hmdp.utils.RedisIdWorker;
+import com.hmdp.utils.SimpleRedisLock;
 import com.hmdp.utils.UserHolder;
 import org.apache.ibatis.javassist.compiler.ast.Variable;
 import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,7 +33,8 @@ import java.time.LocalDateTime;
 public class VoucherOrderServiceImpl extends ServiceImpl<VoucherOrderMapper, VoucherOrder> implements IVoucherOrderService {
     @Resource
     private ISeckillVoucherService seckillVoucherService;
-
+    @Resource
+    private StringRedisTemplate stringRedisTemplate;
     @Resource
     private RedisIdWorker redisIdWorker;
 
@@ -56,12 +59,27 @@ public class VoucherOrderServiceImpl extends ServiceImpl<VoucherOrderMapper, Vou
         }
         // 一人一单逻辑
         // 查询用户id
-        Long userid = UserHolder.getUser().getId();
-        // 等事务提交之后再释放锁，确保事务不出问题
+        Long userId = UserHolder.getUser().getId();
+        // 获取锁对象
+        SimpleRedisLock lock = new SimpleRedisLock("order:" + userId, stringRedisTemplate);
+        // 获取锁
+        boolean isLock = lock.tryLock(1200);// 设置这么长是为了打断点测试，实际设置5s左右
+        // 判断
+        if(!isLock){
+            return Result.fail("不允许重复下单");
+        }
+        try {
+            IVoucherOrderService proxy = (IVoucherOrderService) AopContext.currentProxy();// 代理对象
+            return proxy.createVoucherOrder(voucherId);
+        } finally {
+            // 释放锁
+            lock.unlock();
+        }
+        /*// 等事务提交之后再释放锁，确保事务不出问题
         synchronized (userid.toString().intern()) {
             IVoucherOrderService proxy = (IVoucherOrderService) AopContext.currentProxy();// 代理对象
             return proxy.createVoucherOrder(voucherId);
-        }
+        }*/
     }
 
     @Transactional
