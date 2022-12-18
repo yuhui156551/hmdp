@@ -12,6 +12,8 @@ import com.hmdp.utils.RedisIdWorker;
 import com.hmdp.utils.SimpleRedisLock;
 import com.hmdp.utils.UserHolder;
 import org.apache.ibatis.javassist.compiler.ast.Variable;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -20,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
+import java.util.concurrent.TimeUnit;
 
 /**
  * <p>
@@ -38,9 +41,12 @@ public class VoucherOrderServiceImpl extends ServiceImpl<VoucherOrderMapper, Vou
     @Resource
     private RedisIdWorker redisIdWorker;
 
+    @Resource
+    private RedissonClient redissonClient;
+
     @Override
     //@Transactional// 涉及两张表的操作，最好加上事务处理
-    public Result seckillVoucher(Long voucherId) {
+    public Result seckillVoucher(Long voucherId) throws InterruptedException {
         // 查询优惠券信息
         SeckillVoucher seckillVoucher = seckillVoucherService.getById(voucherId);
         // 判断秒杀是否开始
@@ -61,9 +67,11 @@ public class VoucherOrderServiceImpl extends ServiceImpl<VoucherOrderMapper, Vou
         // 查询用户id
         Long userId = UserHolder.getUser().getId();
         // 获取锁对象
-        SimpleRedisLock lock = new SimpleRedisLock("order:" + userId, stringRedisTemplate);
+//        SimpleRedisLock lock = new SimpleRedisLock("order:" + userId, stringRedisTemplate);
+        RLock lock = redissonClient.getLock("lock:order:" + userId);
         // 获取锁
-        boolean isLock = lock.tryLock(1200);// 设置这么长是为了打断点测试，实际设置5s左右
+//        boolean isLock = lock.tryLock(1200);// 设置这么长是为了打断点测试，实际设置5s左右
+        boolean isLock = lock.tryLock(1L, TimeUnit.SECONDS);
         // 判断
         if(!isLock){
             return Result.fail("不允许重复下单");
