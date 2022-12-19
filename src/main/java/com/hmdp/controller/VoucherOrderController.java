@@ -28,7 +28,7 @@ public class VoucherOrderController {
     // Request URL: http://localhost:8080/api/voucher-order/seckill/10
     // Request Method: POST
     @PostMapping("seckill/{id}")
-    public Result seckillVoucher(@PathVariable("id") Long voucherId) {
+    public Result seckillVoucher(@PathVariable("id") Long voucherId) throws InterruptedException {
         return voucherOrderService.seckillVoucher(voucherId);
     }
 }
