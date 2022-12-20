@@ -16,8 +16,8 @@ import java.time.LocalDateTime;
  * 
  * </p>
  *
- * @author 虎哥
- * @since 2021-12-22
+ * @author yuhui
+ * @since 2022-12-20
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -43,7 +43,7 @@ public class Blog implements Serializable {
     /**
      * 用户图标
      */
-    @TableField(exist = false)
+    @TableField(exist = false)// 表示此字段不属于这个blog表，待手动维护
     private String icon;
     /**
      * 用户姓名

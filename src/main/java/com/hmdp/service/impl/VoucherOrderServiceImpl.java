@@ -49,7 +49,7 @@ public class VoucherOrderServiceImpl extends ServiceImpl<VoucherOrderMapper, Vou
     @Resource
     private StringRedisTemplate stringRedisTemplate;
 
-    private static final DefaultRedisScript<Long> SECKILL_SCRIPT;
+    /*private static final DefaultRedisScript<Long> SECKILL_SCRIPT;
 
     static {
         SECKILL_SCRIPT = new DefaultRedisScript<>();
@@ -57,14 +57,14 @@ public class VoucherOrderServiceImpl extends ServiceImpl<VoucherOrderMapper, Vou
         SECKILL_SCRIPT.setResultType(Long.class);
     }
 
+    // TODO 慎开，因为会自动开启，平时把这些注释掉，不然容易报错
     // 异步处理线程池
     private static final ExecutorService SECKILL_ORDER_EXECUTOR = Executors.newSingleThreadExecutor();
 
     @PostConstruct // 类初始化之后执行
     private void init() {
         SECKILL_ORDER_EXECUTOR.submit(new VoucherOrderHandler());
-    }
-
+    }*/
     /**
      * 获取消息队列中的订单消息
      * 在类初始化之后执行
@@ -207,7 +207,7 @@ public class VoucherOrderServiceImpl extends ServiceImpl<VoucherOrderMapper, Vou
     public Result seckillVoucher(Long voucherId) {
         Long userId = UserHolder.getUser().getId();
         long orderId = redisIdWorker.nextId("order");
-        // 1.执行lua脚本
+        /*// 1.执行lua脚本
         Long result = stringRedisTemplate.execute(
                 SECKILL_SCRIPT,
                 Collections.emptyList(),
@@ -218,7 +218,7 @@ public class VoucherOrderServiceImpl extends ServiceImpl<VoucherOrderMapper, Vou
         if (r != 0) {
             // 2.1.不为0 ，代表没有购买资格
             return Result.fail(r == 1 ? "库存不足" : "不能重复下单");
-        }
+        }*/
         // 3.返回订单id
         return Result.ok(orderId);
     }

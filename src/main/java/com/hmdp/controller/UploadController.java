@@ -19,6 +19,7 @@ public class UploadController {
 
     @PostMapping("blog")
     public Result uploadImage(@RequestParam("file") MultipartFile image) {
+        // TODO 等会debug一下，体验一下详细流程
         try {
             // 获取原始文件名称
             String originalFilename = image.getOriginalFilename();
