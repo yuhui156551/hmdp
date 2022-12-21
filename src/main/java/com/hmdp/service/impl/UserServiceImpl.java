@@ -112,34 +112,37 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             return Result.fail("手机号格式错误！");
         }
 
-        //TODO 从redis获取验证码并校验
+        // 从redis获取验证码并校验
         String cacheCode = stringRedisTemplate.opsForValue().get(LOGIN_CODE_KEY + phone);
         String code = loginForm.getCode();
         if (cacheCode == null || !cacheCode.equals(code)) {
-            //验证码不一致，报错
+            // 验证码不一致，报错
             return Result.fail("验证码错误");
         }
 
-        //一致，根据手机号查询用户
+        // 一致，根据手机号查询用户
         User user = query().eq("phone", phone).one();
         if(user == null){
             //创建用户
             createUserWithPhone(phone);
         }
 
-        //TODO 保存用户信息到redis中
-        //随机生成token，作为登陆令牌
+        // 保存用户信息到redis中
+        // uuid随机生成token，作为登陆令牌
         String token = UUID.randomUUID().toString(true);
-        //将User对象转为HashMap存储
+        // 将User对象转为HashMap存储
+        // 转成DTO，减少实体类的属性进行存储，隐藏用户敏感信息
+        // ps：工具类用的挺溜的
         UserDTO userDTO = BeanUtil.copyProperties(user, UserDTO.class);
         Map<String, Object> userMap = BeanUtil.beanToMap(userDTO,new HashMap<>(),
                 CopyOptions.create()
                         .setIgnoreNullValue(true)
+                        // 将值字段属性设置成String类型
                         .setFieldValueEditor((fieldName, fieldValue) -> fieldValue.toString()));
-        //存储user信息到redis
+        // 存储user信息到redis
         String tokenKey = LOGIN_USER_KEY + token;
         stringRedisTemplate.opsForHash().putAll(tokenKey, userMap);
-        //设置token有效期
+        // 设置token有效期
         stringRedisTemplate.expire(tokenKey,LOGIN_USER_TTL,TimeUnit.MINUTES);//30分钟，和session一样
 
         return Result.ok(token);
