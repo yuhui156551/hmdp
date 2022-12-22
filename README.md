@@ -14,7 +14,7 @@
 
 6.浏览器：Google Chrome
 
-7.服务器架构：Spring Boot 2.3.12 + MyBatisPlus 3.4.3 + Redis6.2.6 + Nginx
+7.服务器架构：Spring Boot 2.3.12 + MyBatisPlus 3.4.3 + Redis 6.2.6 + Nginx 1.18.0
 
 ### 馀灰的话多时刻
 
