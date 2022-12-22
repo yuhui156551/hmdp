@@ -57,13 +57,14 @@ public class VoucherOrderServiceImpl extends ServiceImpl<VoucherOrderMapper, Vou
         SECKILL_SCRIPT.setResultType(Long.class);
     }
 
-    // TODO 慎开，因为会自动开启，平时把这些注释掉，不然容易报错
+
     // 异步处理线程池
     private static final ExecutorService SECKILL_ORDER_EXECUTOR = Executors.newSingleThreadExecutor();
 
     @PostConstruct // 类初始化之后执行
     private void init() {
-        SECKILL_ORDER_EXECUTOR.submit(new VoucherOrderHandler());
+        // TODO 慎开，因为会自动开启，平时把这些注释掉，不然会报错
+        // SECKILL_ORDER_EXECUTOR.submit(new VoucherOrderHandler());
     }
     /**
      * 获取消息队列中的订单消息
