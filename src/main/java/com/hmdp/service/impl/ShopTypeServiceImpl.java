@@ -29,21 +29,25 @@ public class ShopTypeServiceImpl extends ServiceImpl<ShopTypeMapper, ShopType> i
     @Resource
     private StringRedisTemplate stringRedisTemplate;
 
+    /**
+     * 基本流程大致一样，先从缓存找数据，没找到再查数据库，然后把数据写入缓存
+     * @return
+     */
     @Override
     public Result queryList() {
         String key = CACHE_TPTE_LIST;
-        //从Redis查询类型缓存
+        // 从Redis查询类型缓存
         String typeJson = stringRedisTemplate.opsForValue().get(key);
-        //缓存不为空，直接返回
+        // 缓存不为空，直接返回
         if (StrUtil.isNotBlank(typeJson)) {
             List<ShopType> shopTypes = JSONUtil.toList(typeJson, ShopType.class);
             return Result.ok(shopTypes);
         }
-        //为空，查询数据库，直接把之前控制层的代码复制过来
+        // 为空，查询数据库，直接把之前控制层的代码复制过来
         List<ShopType> shopTypes = query().orderByAsc("sort").list();
-        //将数据写入Redis
+        // 将数据写入Redis
         stringRedisTemplate.opsForValue().set(key, JSONUtil.toJsonStr(shopTypes));
-        //返回
+        // 返回
         return Result.ok(shopTypes);
     }
 }

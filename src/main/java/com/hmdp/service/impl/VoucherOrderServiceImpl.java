@@ -49,7 +49,7 @@ public class VoucherOrderServiceImpl extends ServiceImpl<VoucherOrderMapper, Vou
     @Resource
     private StringRedisTemplate stringRedisTemplate;
 
-    /*private static final DefaultRedisScript<Long> SECKILL_SCRIPT;
+    private static final DefaultRedisScript<Long> SECKILL_SCRIPT;
 
     static {
         SECKILL_SCRIPT = new DefaultRedisScript<>();
@@ -64,7 +64,7 @@ public class VoucherOrderServiceImpl extends ServiceImpl<VoucherOrderMapper, Vou
     @PostConstruct // 类初始化之后执行
     private void init() {
         SECKILL_ORDER_EXECUTOR.submit(new VoucherOrderHandler());
-    }*/
+    }
     /**
      * 获取消息队列中的订单消息
      * 在类初始化之后执行

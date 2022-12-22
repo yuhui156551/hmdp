@@ -17,6 +17,11 @@ import java.util.UUID;
 @RequestMapping("upload")
 public class UploadController {
 
+    /**
+     * 上传头像
+     * @param image 头像文件路径
+     * @return
+     */
     @PostMapping("blog")
     public Result uploadImage(@RequestParam("file") MultipartFile image) {
         // TODO 等会debug一下，体验一下详细流程
@@ -45,6 +50,11 @@ public class UploadController {
         return Result.ok();
     }
 
+    /**
+     * 生成新文件名
+     * @param originalFilename
+     * @return
+     */
     private String createNewFileName(String originalFilename) {
         // 获取后缀
         String suffix = StrUtil.subAfter(originalFilename, ".", true);
