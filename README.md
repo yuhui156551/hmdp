@@ -40,10 +40,10 @@
   下面是一些效果图，如果看不了的话，建议科学上网。
 
 ### 主页面
- ![image](https://github.com/yuhui156551/store/blob/master/imag/20221219185112.png)
-### 管理用户信息
- ![image](https://github.com/yuhui156551/store/blob/master/imag/20221219185217.png)
-### 加入购物车
- ![image](https://github.com/yuhui156551/store/blob/master/imag/20221219185442.png)
-### 生成订单
- ![image](https://github.com/yuhui156551/store/blob/master/imag/20221219185541.png)
+ ![image](https://github.com/yuhui156551/hmdp/blob/master/img/20221222132330.png)
+### 笔记详情
+ ![image](https://github.com/yuhui156551/hmdp/blob/master/img/20221222132351.png)
+### 美食类型商铺
+ ![image](https://github.com/yuhui156551/hmdp/blob/master/img/20221222132358.png)
+### 上传博客
+ ![image](https://github.com/yuhui156551/hmdp/blob/master/img/20221222132406.png)
