@@ -35,7 +35,7 @@
   主要实现以下功能：用户注册登录、上传博客、点赞博客、查询商铺、关注博主、抢优惠券等，有一些例如feed流、附近商户、用户签到、UV统计还未实现。太多东西说不完，需要自己体验，具体内容可以google下载octotree插件预览代码或者直接fork到本地看（注释很多，不怕看不懂）。
   
 ### 项目启动
-  首先idea里创建名为hmdp的数据库，然后执行resource目录下的sql文件，修改yml配置文件，把数据库、redis账号密码改成自己的，运行之前请在Redis客户端提前写好命令 XGROUP CREATE stream.orders g1 0 MKSTREAM 并执行（这条命令是关于消息队列的，提前创建好以免运行报错，或者也可以把相关代码注释掉：在VoucherOrderServiceImpl.java的第66行），启动项目，随后启动nginx（最好是在纯英文路径下），访问localhost:8080/login.html。
+  首先idea里创建名为hmdp的数据库，然后执行resource目录下的sql文件，修改yml配置文件，把数据库、redis账号密码改成自己的，运行之前请在Redis客户端提前写好命令 XGROUP CREATE stream.orders g1 0 MKSTREAM 并执行（这条命令是关于消息队列的，提前创建好以免运行报错，或者也可以把相关代码注释掉：在 VoucherOrderServiceImpl.java的第66行），启动项目，随后启动nginx（最好是在纯英文路径下），访问 localhost:8080/login.html。
   
   下面是一些效果图，如果看不了的话，建议科学上网。
 
