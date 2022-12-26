@@ -3,19 +3,11 @@
 
 ### 系统开发及运行环境
 
-1.操作系统：Windows 10
+Java开发包：JDK 8
 
-2.Java开发包：JDK 8
+数据库：MySQL 8.0.30
 
-3.项目管理工具：Maven 3.6.1
-
-4.项目开发工具：IntelliJ IDEA 2022.2.2 x64
-
-5.数据库：MySQL 8.0.30
-
-6.浏览器：Google Chrome
-
-7.服务器架构：Spring Boot 2.3.12 + MyBatisPlus 3.4.3 + Redis 6.2.6 + Nginx 1.18.0
+服务器架构：Spring Boot 2.3.12 + MyBatisPlus 3.4.3 + Redis 6.2.6 + Nginx 1.18.0
 
 ### 馀灰的话多时刻
 
