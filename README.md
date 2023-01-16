@@ -3,13 +3,13 @@
 
 ### 技术栈
 
-  SpringBoot2、MybatisPlus、Redis、hutool、aspectj、MySQL、lombok、lua脚本、nginx。
+  SpringBoot2、MybatisPlus、Redis、Redisson、hutool、aspectj、MySQL、Lombok、Lua、Nginx。
   
 ### 实现
   
-  主要实现功能：用户注册登录、上传博客、点赞博客、查询商铺、关注博主、优惠券秒杀等。
+  主要实现功能：用户注册登录、上传博客、点赞博客、查询商铺、好友关注、优惠券秒杀、附近商户等。
   
-  下面是一些效果图，如果看不了的话，建议科学上网。
+  下面是一些效果图，如果看不了的话，建议使用魔法。
 
 #### 主页面
  ![image](https://github.com/yuhui156551/hmdp/blob/master/img/20221222132330.png)
