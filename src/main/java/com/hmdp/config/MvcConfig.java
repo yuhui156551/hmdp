@@ -16,10 +16,9 @@ public class MvcConfig implements WebMvcConfigurer {
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
 
-
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        //登录拦截器
+        // 登录拦截器
         registry.addInterceptor(new LoginInterceptor())
                 .excludePathPatterns(
                         "/shop/**",
@@ -29,7 +28,7 @@ public class MvcConfig implements WebMvcConfigurer {
                         "/blog/hot",
                         "/user/code",
                         "/user/login"
-                ).order(1);//调节拦截器优先级，数字越大，优先级越小
+                ).order(1);// 调节拦截器优先级，数字越大，优先级越小
         // 拦截所有
         registry.addInterceptor(new RefreshTokenInterceptor(stringRedisTemplate)).addPathPatterns("/**").order(0);
     }
