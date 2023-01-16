@@ -48,4 +48,12 @@ public interface IBlogService extends IService<Blog> {
      * @return
      */
     Result saveBlog(Blog blog);
+
+    /**
+     * 分页查询收邮箱
+     * @param max 上次查询的最小时间-本次查询的最大时间
+     * @param offset 偏移量
+     * @return
+     */
+    Result queryBlogOfFollow(Long max, Integer offset);
 }
